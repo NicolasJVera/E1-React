@@ -1,12 +1,15 @@
 import Form from "./Components/Form/Form"
 import { GlobalStyles } from "./Components/GlobalStyles"
+import { TaskProvider } from "./Components/TodoList/TodoList"
 
 function App() {
   
 
   return (
     <>
-     <Form />
+    <TaskProvider>
+      <Form />
+    </TaskProvider>
      <GlobalStyles />
     </>
   )

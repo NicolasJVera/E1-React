@@ -100,3 +100,9 @@ export const HrForm = styled.hr`
     width: 100%;
     opacity: 0.3;
 `;
+
+export const ErrorMessage = styled.p`
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+`;
