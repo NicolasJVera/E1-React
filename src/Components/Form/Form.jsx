@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { addTask, deleteTask, clearTasks } from "../../store/taskSlice";
 import {
   ButtonDelete,
   ButtonDeleteAll,
@@ -12,10 +14,10 @@ import {
   TitleForm,
   ErrorMessage,
 } from "./styles"; // Asegúrate de agregar un estilo para el mensaje de error
-import { useTaskContext } from "../TodoList/TodoList";
 
 const Form = () => {
-  const { tasks, addTask, deleteTask, clearTasks } = useTaskContext();
+  const tasks = useSelector((state) => state.tasks.tasks);
+  const dispatch = useDispatch();
   const [newTask, setNewTask] = useState("");
   const [error, setError] = useState("");
 
@@ -34,7 +36,7 @@ const Form = () => {
       return;
     }
 
-    addTask(newTask.trim());
+    dispatch(addTask(newTask.trim()));
     setNewTask("");
     setError(""); // Limpiamos el mensaje de error al agregar correctamente
   };
@@ -61,14 +63,14 @@ const Form = () => {
         {tasks.map((task) => (
           <ItemContainer key={task.id}>
             <p>{task.text}</p>
-            <ButtonDelete onClick={() => deleteTask(task.id)}>Borrar</ButtonDelete>
+            <ButtonDelete onClick={() => dispatch(deleteTask(task.id))}>Borrar</ButtonDelete>
           </ItemContainer>
         ))}
         {tasks.length > 0 && <HrForm />}
       </ListContainer>
 
       {tasks.length > 0 && (
-        <ButtonDeleteAll onClick={clearTasks}>Borrar Todas</ButtonDeleteAll>
+        <ButtonDeleteAll onClick={() => dispatch(clearTasks())}>Borrar Todas</ButtonDeleteAll>
       )}
     </FormContainer>
   );

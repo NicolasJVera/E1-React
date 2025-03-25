@@ -1,28 +1,48 @@
 // TaskContext.js
-import React, { createContext, useContext, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { addTask, deleteTask, clearTasks } from "../../store/taskSlice";
 
-const TaskContext = createContext();
+const TodoList = () => {
+  const tasks = useSelector((state) => state.tasks.tasks);
+  const dispatch = useDispatch();
 
-export const useTaskContext = () => useContext(TaskContext);
-
-export const TaskProvider = ({ children }) => {
-  const [tasks, setTasks] = useState([]);
-
-  const addTask = (text) => {
-    setTasks((prev) => [...prev, { id: Date.now(), text }]);
+  const handleAddTask = (text) => {
+    dispatch(addTask(text));
+  };
+  
+  const handleDeleteTask = (id) => {
+    dispatch(deleteTask(id))
   };
 
-  const deleteTask = (id) => {
-    setTasks((prev) => prev.filter((task) => task.id !== id));
-  };
-
-  const clearTasks = () => {
-    setTasks([]);
+  const handleClearTasks = () => {
+    dispatch(clearTasks())
   };
 
   return (
-    <TaskContext.Provider value={{ tasks, addTask, deleteTask, clearTasks }}>
-      {children}
-    </TaskContext.Provider>
+    <>
+      <h1>Lista de Tareas</h1> 
+      <form onSubmit={(e) => {
+        e.preventDefault();
+        const text = e.target.text.value;
+        if (text.trim()) {
+          handleAddTask(text);
+          e.target.reset();
+        }
+      }}>
+        <input type="text" name="text" placeholder="Nueva Tarea" />
+        <button type="submit">Agregar</button>
+      </form>
+      <ul>
+        {tasks.map((task) => (
+          <li key={task.id}>
+            {task.text}
+            <button onClick={() => handleDeleteTask(task.id)}>Eliminar</button>
+          </li>
+        ))}
+      </ul>
+      <button onClick={handleClearTasks}>Limpiar todas</button>
+    </>
   );
 };
+
+export default TodoList;
